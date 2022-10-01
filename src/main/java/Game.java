@@ -56,6 +56,10 @@ public class Game {
         }
     }
 
+    private void moveHero(Position position) {
+        hero.setPosition(position);
+    }
+
     private void processKey (KeyStroke key){
         //Check, if window has been closed
         if (key.getKeyType() == EOF)
@@ -64,15 +68,15 @@ public class Game {
         System.out.println(key);
         switch (key.getKeyType()){
             case EOF -> runGame = false;
-            case ArrowUp -> hero.moveUp(step);
-            case ArrowDown -> hero.moveDown(step);
-            case ArrowLeft -> hero.moveLeft(step);
-            case ArrowRight -> hero.moveRight(step);
+            case ArrowUp -> moveHero(hero.moveUp());
+            case ArrowDown -> moveHero(hero.moveDown());
+            case ArrowLeft -> moveHero(hero.moveLeft());
+            case ArrowRight -> moveHero(hero.moveRight());
             case Character -> {
                 switch (key.getCharacter()){
                     case 'q' -> runGame = false;
-                    case 'x' -> step += 1;
-                    case 'z' -> {if (step > 1) step -= 1;}
+                    case 'x' -> hero.increaseStep();
+                    case 'z' -> {if (hero.getStep() > 1) hero.decreaseStep();}
                 }
             }
         }
