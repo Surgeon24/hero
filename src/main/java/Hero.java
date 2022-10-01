@@ -1,4 +1,8 @@
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 
 public class Hero {
@@ -52,8 +56,10 @@ public class Hero {
         step -= 1;
     }
 
-    public void draw(Screen s){
-        s.setCharacter(position.getX(), position.getY(), TextCharacter.fromCharacter('X')[0]);
+    public void draw(TextGraphics s){
+        s.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        s.enableModifiers(SGR.BOLD);
+        s.putString(new TerminalPosition(position.getX(), position.getY()), "X");
     }
 
 }

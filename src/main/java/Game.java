@@ -1,4 +1,8 @@
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
@@ -17,8 +21,9 @@ import static com.googlecode.lanterna.input.KeyType.EOF;
 public class Game {
     private static Screen screen;
     private boolean runGame = true;
+    //allows us to draw figures and change bg color
 
-    Hero hero = new Hero(10, 10); //create Hero
+    Arena arena = new Arena(60, 20);
     private int step = 1;
 
     public Game() {
@@ -35,7 +40,7 @@ public class Game {
     private void draw() {
         try {
             screen.clear();
-            hero.draw(screen);
+            arena.draw(screen.newTextGraphics());
             screen.refresh();
         }
         catch (IOException e){
@@ -57,7 +62,8 @@ public class Game {
     }
 
     private void moveHero(Position position) {
-        hero.setPosition(position);
+        if (arena.canHeroMove(position))
+            arena.hero.setPosition(position);
     }
 
     private void processKey (KeyStroke key){
@@ -65,18 +71,18 @@ public class Game {
         if (key.getKeyType() == EOF)
             runGame = false;
         //Check arrows
-        System.out.println(key);
+        System.out.println("x: " + arena.hero.getX() + "\ny: " + arena.hero.getY());
         switch (key.getKeyType()){
             case EOF -> runGame = false;
-            case ArrowUp -> moveHero(hero.moveUp());
-            case ArrowDown -> moveHero(hero.moveDown());
-            case ArrowLeft -> moveHero(hero.moveLeft());
-            case ArrowRight -> moveHero(hero.moveRight());
+            case ArrowUp -> moveHero(arena.hero.moveUp());
+            case ArrowDown -> moveHero(arena.hero.moveDown());
+            case ArrowLeft -> moveHero(arena.hero.moveLeft());
+            case ArrowRight -> moveHero(arena.hero.moveRight());
             case Character -> {
                 switch (key.getCharacter()){
                     case 'q' -> runGame = false;
-                    case 'x' -> hero.increaseStep();
-                    case 'z' -> {if (hero.getStep() > 1) hero.decreaseStep();}
+                    case 'x' -> arena.hero.increaseStep();
+                    case 'z' -> {if (arena.hero.getStep() > 1) arena.hero.decreaseStep();}
                 }
             }
         }
