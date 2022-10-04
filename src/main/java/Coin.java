@@ -4,7 +4,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Coin extends Element{
-    String coinColor = "#888888";
+    String coinColor = "#66a834";
     public Coin(int newX, int newY) { super(newX, newY);}
 
     public void draw(Arena a, TextGraphics s){

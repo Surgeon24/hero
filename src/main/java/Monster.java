@@ -6,31 +6,33 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import java.util.Random;
 
 public class Monster extends Element{
-    String monsterColor = "#666666";
+    String monsterColor = "#c4722f";
     private final int step = 1;
     public Monster(int newX, int newY) { super(newX, newY);}
 
     public Position move(){
         Random random = new Random();
         switch (random.nextInt(4)){
-            case 1 -> {return moveUp();}
-            case 2 -> {return moveDown();}
-            case 3 -> {return moveLeft();}
-            case 4 -> {return moveRight();}
+            case 1 -> {System.out.println("\n1"); moveUp();}
+            case 2 -> {System.out.println("\n2"); moveDown();}
+            case 3 -> {System.out.println("\n3"); moveLeft();}
+            case 4 -> {System.out.println("\n4"); moveRight();}
         }
         return getPosition();
     }
     //moves
-    public Position moveUp(){
-        return new Position(getX(), getY() - step);
+    public void moveUp(){
+        setPosition(new Position(getX(), getY()-step));
     }
-    public Position moveDown(){
-        return new Position(getX(), getY() + step);
+    public void moveDown(){
+        setPosition(new Position(getX(), getY() + step));
     }
-    public Position moveLeft(){
-        return new Position(getX() - step, getY());
+    public void moveLeft(){
+        setPosition(new Position(getX() - step, getY()));
     }
-    public Position moveRight(){ return new Position(getX() + step, getY());}
+    public void moveRight(){
+        setPosition(new Position(getX() + step, getY()));
+    }
 
 
     public void draw(Arena a, TextGraphics s){

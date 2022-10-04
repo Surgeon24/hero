@@ -5,6 +5,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Hero extends Element {
     private final int step = 1;
+    private final String heroColor = "#2d94cc";
 
     public Hero(int newX, int newY){
         super(newX, newY);
@@ -23,7 +24,7 @@ public class Hero extends Element {
     public int getStep(){ return step;}
 
     public void draw(TextGraphics s){
-        s.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        s.setForegroundColor(TextColor.Factory.fromString(heroColor));
         s.enableModifiers(SGR.BOLD);
         s.putString(new TerminalPosition(getX(), getY()), "X");
     }
