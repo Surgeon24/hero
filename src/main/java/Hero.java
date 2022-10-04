@@ -4,7 +4,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Hero extends Element {
-    private int step = 1;
+    private final int step = 1;
 
     public Hero(int newX, int newY){
         super(newX, newY);

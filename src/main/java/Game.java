@@ -53,7 +53,19 @@ public class Game {
         if (arena.canHeroMove(position)) {
             arena.hero.setPosition(position);
             arena.retrieveCoins(position);
+            moveMonsters();
         }
+    }
+
+    private void moveMonsters() {
+
+        /*
+        for (Coin coin : coins)
+            coin.draw(this, tGraphic);
+        if (arena.canHeroMove(position)) {
+            arena.hero.setPosition(position);
+            arena.retrieveCoins(position);
+        }*/
     }
 
     private void processKey (KeyStroke key){

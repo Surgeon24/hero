@@ -12,6 +12,8 @@ public class Arena {
     private int width;
     private List<Wall> walls;
     private List<Coin> coins;
+
+    private List<Monster> monsters;
     Hero hero = new Hero(10, 10);
     int score = 0;
     public Arena(int l, int w){
@@ -19,8 +21,11 @@ public class Arena {
         width = w;
         this.walls = createWalls();
         this.coins = createCoins();
+        this.monsters = createMonsters();
 
     }
+
+    public List<Monster> getMonsters(){ return monsters;}
 
     private List<Wall> createWalls() {
         List<Wall> walls = new ArrayList<>();
@@ -48,6 +53,13 @@ public class Arena {
         return coins;
     }
 
+    private List<Monster> createMonsters() {
+        ArrayList<Monster> monsters = new ArrayList<>();
+        for (int i = 0; i < 3; i++)
+            monsters.add(new Monster(20+3*i,10+2*i));
+        return monsters;
+    }
+
     public void retrieveCoins(Position pos){
         for (Coin coin : coins){
             if (coin.getPosition().equals(pos)) {
@@ -63,8 +75,6 @@ public class Arena {
             return true;
         return false;
     }
-
-
 
     public boolean checkWall(Position pos){
         for (Wall wall : walls){
@@ -82,5 +92,7 @@ public class Arena {
             wall.draw(tGraphic);
         for (Coin coin : coins)
             coin.draw(this, tGraphic);
+        for (Monster monster : monsters)
+            monster.draw(this, tGraphic);
     }
 }
