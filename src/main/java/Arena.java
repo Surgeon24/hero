@@ -1,20 +1,25 @@
 import com.googlecode.lanterna.*;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.screen.Screen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Arena {
+    //colors
+    public String floorColor = "#696969";
     private int length;
     private int width;
     private List<Wall> walls;
-    Hero hero = new Hero(10, 10); //create Hero
-
+    private List<Coin> coins;
+    Hero hero = new Hero(10, 10);
+    int score = 0;
     public Arena(int l, int w){
         length = l;
         width = w;
         this.walls = createWalls();
+        this.coins = createCoins();
+
     }
 
     private List<Wall> createWalls() {
@@ -33,6 +38,26 @@ public class Arena {
         }
         return walls;
     }
+
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+            coins.add(new Coin(random.nextInt(length - 2) + 1,
+                    random.nextInt(width - 2) + 1));
+        return coins;
+    }
+
+    public void retrieveCoins(Position pos){
+        for (Coin coin : coins){
+            if (coin.getPosition().equals(pos)) {
+                coins.remove(coin);
+                score ++;
+                break;
+            }
+        }
+    }
+
     public boolean canHeroMove(Position pos){
         if (!checkWall(pos))
             return true;
@@ -49,12 +74,13 @@ public class Arena {
         return false;
     }
 
-    public void draw(TextGraphics s){
-        s.setBackgroundColor(TextColor.Factory.fromString("#696969"));
-        s.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
-        hero.draw(s);
+    public void draw(TextGraphics tGraphic){
+        tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));
+        tGraphic.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
+        hero.draw(tGraphic);
         for (Wall wall : walls)
-            wall.draw(s);
-
+            wall.draw(tGraphic);
+        for (Coin coin : coins)
+            coin.draw(this, tGraphic);
     }
 }

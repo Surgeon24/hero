@@ -1,21 +1,9 @@
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.input.KeyStroke;
-
-import javax.swing.*;
-import java.io.EOFException;
 import java.io.IOException;
-import java.net.SocketOption;
-
-import static com.googlecode.lanterna.input.KeyType.Delete;
 import static com.googlecode.lanterna.input.KeyType.EOF;
 
 public class Game {
@@ -62,8 +50,10 @@ public class Game {
     }
 
     private void moveHero(Position position) {
-        if (arena.canHeroMove(position))
+        if (arena.canHeroMove(position)) {
             arena.hero.setPosition(position);
+            arena.retrieveCoins(position);
+        }
     }
 
     private void processKey (KeyStroke key){
@@ -72,6 +62,7 @@ public class Game {
             runGame = false;
         //Check arrows
         System.out.println("x: " + arena.hero.getX() + "\ny: " + arena.hero.getY());
+        System.out.println("Score: " + arena.score);
         switch (key.getKeyType()){
             case EOF -> runGame = false;
             case ArrowUp -> moveHero(arena.hero.moveUp());
@@ -81,8 +72,6 @@ public class Game {
             case Character -> {
                 switch (key.getCharacter()){
                     case 'q' -> runGame = false;
-                    case 'x' -> arena.hero.increaseStep();
-                    case 'z' -> {if (arena.hero.getStep() > 1) arena.hero.decreaseStep();}
                 }
             }
         }
