@@ -1,10 +1,10 @@
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TextColor;
+package elements;
+
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Element {
     private Position position;
+    protected String floorColor = "#696969";
     Element(int newX, int newY) {
         position = new Position(newX, newY);
     }
@@ -14,6 +14,8 @@ public class Element {
         return position;
     }
     public void setPosition(Position pos){ this.position = pos;}
+
+    public String getColor(){ return "#ffffff";}
     public int getX() {
         return position.getX();
     }
