@@ -7,29 +7,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static common.Globals.length;
+import static common.Globals.width;
+
 
 public class Arena1 {
     private String floorColor = "#696969";
-    private int length;
-    private int width;
     public Integer score = 0;
     private List<Wall> walls;
     private List<Coin> coins;
 
     private List<Monster> monsters;
+    private Door door;
     public Hero hero = new Hero(10, 10);
-    public Arena1(int l, int w){
-        length = l;
-        width = w;
-        this.walls = createWalls();
-        this.coins = createCoins();
-        this.monsters = createMonsters();
+    public Arena1(){
+        walls = createWalls();
+        coins = createCoins();
+        monsters = createMonsters();
+        door = new Door(70,22);
     }
 
     public int getLength(){ return length;}
     public int getWidth(){ return width;}
+    public List<Wall> getWalls(){ return walls;}
+    public List<Coin> getCoins(){ return coins;}
     public List<Monster> getMonsters(){ return monsters;}
-
+    public Door getDoor(){ return door;}
     private List<Wall> createWalls() {
         List<Wall> walls = new ArrayList<>();
         //main walls

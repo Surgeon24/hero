@@ -4,32 +4,39 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import common.MetaInf;
 import elements.*;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import static common.Globals.length;
+import static common.Globals.width;
 
 
-public class Arena0 extends Arena{
-    //colors
+public class Arena0 {
     public String floorColor = "#696969";
-    private int length;
-    private int width;
     private List<Wall> walls;
     private List<Coin> coins;
     private List<Monster> monsters;
-    public Arena0(int l, int w){
-        this.length = l;
-        this.width = w;
-        this.walls = createWalls();
-        this.coins = createCoins();
-        this.monsters = createMonsters();
+    private Door door;
+    public Hero hero = new Hero(4, 7);
+    public Arena0(){
+        walls = createWalls();
+        coins = createCoins();
+        monsters = createMonsters();
+        door = new Door(78,22);
+
     }
 
     public List<Wall> getWalls(){ return walls;}
     public List<Coin> getCoins(){ return coins;}
     public List<Monster> getMonsters(){ return monsters;}
+    public Door getDoor(){ return door;}
+
+    public MetaInf getAll(){
+        MetaInf meta = new MetaInf(hero.getPosition(), walls, coins, monsters, door);
+        return meta;
+    }
     private List<Wall> createWalls() {
         List<Wall> walls = new ArrayList<>();
         //main walls
@@ -49,7 +56,7 @@ public class Arena0 extends Arena{
             walls.add(new Wall(l, 8));
             walls.add(new Wall(l, 12));
         }
-        for (int w = 8; w < 12; w++) {
+        for (int w = 8; w <= 12; w++) {
             walls.add(new Wall(length-5, w));
             walls.add(new Wall(length-5, w));
         }
@@ -68,7 +75,7 @@ public class Arena0 extends Arena{
 
     private List<Coin> createCoins() {
         ArrayList<Coin> coins = new ArrayList<>();
-        coins.add(new Coin(30, 7));
+        coins.add(new Coin(50, 22));
         return coins;
     }
 

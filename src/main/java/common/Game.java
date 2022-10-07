@@ -13,17 +13,16 @@ import com.googlecode.lanterna.input.KeyStroke;
 import java.io.IOException;
 import java.util.List;
 
-public class Game {
+import static common.Globals.length;
+import static common.Globals.width;
 
-    public int length = 80;
-    public int width = 23;
+public class Game {
     private static Screen screen;
     private boolean runGame = true;
     Arena arena = new Arena();
-    Arena0 arena0= new Arena0(length, width);
-    Arena1 arena1 = new Arena1(length, width);
+    Arena0 arena0= new Arena0();
+    Arena1 arena1 = new Arena1();
     Mainbar mainbar = new Mainbar();
-    public Integer score = 0;
     private int step = 1;
     int option = 0;
 
@@ -41,11 +40,8 @@ public class Game {
     private void draw() {
         try {
             screen.clear();
-            if (option == 0)
-                arena0.draw(screen.newTextGraphics());
-            if (option == 1)
-                arena1.draw(screen.newTextGraphics());
-            mainbar.draw(score, screen.newTextGraphics());
+            arena.draw(screen.newTextGraphics());
+            mainbar.draw(arena.score, screen.newTextGraphics());
             screen.refresh();
         }
         catch (IOException e){
@@ -57,11 +53,13 @@ public class Game {
         try {
             MainMenu mainMenu = new MainMenu();
             option = mainMenu.showMenu(screen);
-            System.out.println(arena0.getWalls());
-            arena.createAll(length, width, arena0.getWalls(), arena0.getCoins(), arena0.getMonsters());
+            if (option == 0)
+                arena.createAll(arena0.hero.getPosition(), arena0.getWalls(), arena0.getCoins(), arena0.getMonsters(), arena0.getDoor());
+            if (option == 1)
+                arena.createAll(arena1.hero.getPosition(), arena1.getWalls(), arena1.getCoins(), arena1.getMonsters(), arena1.getDoor());
             while (runGame) {
                 draw();
-                if (verifyMonsterCollisions(arena1.getMonsters(), arena1.hero.getPosition()))
+                if (verifyMonsterCollisions(arena.getMonsters(), arena.hero.getPosition()))
                     endScreen();
                 KeyStroke key = screen.readInput();
                 processKey(key);
@@ -73,18 +71,24 @@ public class Game {
     }
 
     private void moveHero(Position position) {
-        if (arena1.canHeroMove(position)) {
-            arena1.hero.setPosition(position);
-            arena1.retrieveCoins(position);
-            if (verifyMonsterCollisions(arena1.getMonsters(),
-                    arena1.hero.getPosition())) { endScreen();}
-            moveMonsters(arena1.getMonsters());
+        if (arena.canHeroMove(position)) {
+            arena.hero.setPosition(position);
+            arena.retrieveCoins(position);
+            if (verifyMonsterCollisions(arena.getMonsters(),
+                    arena.hero.getPosition())) { endScreen();}
+            moveMonsters(arena.getMonsters());
+
+            if (arena.nextArena()){
+                System.out.println("True was returned!\n");
+                arena.clearAll();
+                arena.createAll(arena1.hero.getPosition(), arena1.getWalls(), arena1.getCoins(), arena1.getMonsters(), arena1.getDoor());
+            }
         }
     }
 
     private void moveMonsters(List<Monster> monsters) {
         for (Monster monster : monsters)
-            monster.move(arena1);
+            monster.move(arena);
     }
 
     private Boolean verifyMonsterCollisions(List<Monster> monsters, Position pos){
@@ -97,14 +101,14 @@ public class Game {
     }
 
     private void processKey (KeyStroke key){
-        System.out.println("x: " + arena1.hero.getX() + "\ny: " + arena1.hero.getY());
-        System.out.println("Score: " + score);
+        System.out.println("x: " + arena.hero.getX() + "\ny: " + arena.hero.getY());
+        System.out.println("Score: " + arena.score);
         switch (key.getKeyType()){
             case EOF -> runGame = false;
-            case ArrowUp -> moveHero(arena1.hero.moveUp());
-            case ArrowDown -> moveHero(arena1.hero.moveDown());
-            case ArrowLeft -> moveHero(arena1.hero.moveLeft());
-            case ArrowRight -> moveHero(arena1.hero.moveRight());
+            case ArrowUp -> moveHero(arena.hero.moveUp());
+            case ArrowDown -> moveHero(arena.hero.moveDown());
+            case ArrowLeft -> moveHero(arena.hero.moveLeft());
+            case ArrowRight -> moveHero(arena.hero.moveRight());
             case Character -> {
                 switch (key.getCharacter()){
                     case 'q' -> runGame = false;
@@ -114,7 +118,7 @@ public class Game {
     }
 
     private void endScreen(){
-        System.out.println("You lose! Your score is: " + score);
+        System.out.println("You lose! Your score is: " + arena.score);
         System.out.println("Press any button to quit.");
         try{ KeyStroke key = screen.readInput();}
         catch (IOException e){e.printStackTrace();}

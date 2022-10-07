@@ -11,24 +11,13 @@ import com.googlecode.lanterna.screen.Screen;
 import java.io.IOException;
 
 import static com.googlecode.lanterna.input.KeyType.EOF;
+import static com.googlecode.lanterna.input.KeyType.values;
+import static common.Globals.length;
+import static common.Globals.width;
 
 public class MainMenu {
     private Boolean check = true;
-    private Boolean press = false;
     int options = 1;
-/*
-    public void showMenu(Screen s) {
-        while (check) {
-            draw(s.newTextGraphics());
-            try{
-                s.clear();
-                KeyStroke key = s.readInput();
-                processKey(key);
-                s.refresh();
-            }
-            catch (IOException e){e.printStackTrace();}
-        }
-    }*/
 
     public int showMenu(Screen screen) {
         try {
@@ -47,7 +36,7 @@ public class MainMenu {
     }
     public void draw(TextGraphics s) {
         s.setBackgroundColor(TextColor.Factory.fromString("#117491"));
-        s.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(80, 25), ' ');
+        s.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
         s.enableModifiers(SGR.BOLD);
         s.setForegroundColor(TextColor.Factory.fromString("#ede9dd"));
         s.putString(new TerminalPosition(30, 10), "HERO v0.2");

@@ -9,30 +9,39 @@ import elements.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static common.Globals.length;
+import static common.Globals.width;
+
 public class Arena {
+
     private String floorColor = "#696969";
-    public Hero hero = new Hero(10, 10);
-    private int length;
-    private int width;
+    public Hero hero = new Hero(0,0);
     public Integer score = 0;
     private List<Wall> walls;
     private List<Coin> coins;
     private List<Monster> monsters;
 
+    private Door door;
+
     public Arena(){}
-    public int getLength(){ return length;}
-    public int getWidth(){ return width;}
 
     public List<Wall> getWalls(){ return walls;}
     public List<Coin> getCoins(){ return coins;}
     public List<Monster> getMonsters(){ return monsters;}
+    public Door getDoor(){ return door;}
 
-    public void createAll(int l, int w, List<Wall> newWalls, List<Coin> newCoin, List<Monster> newMonsters){
-        this.length = l;
-        this.width = w;
-        this.walls = createWalls( newWalls);
-        this.coins = createCoins(newCoin);
-        this.monsters = createMonsters(newMonsters);
+    public void createAll(Position hPos, List<Wall> newW, List<Coin> newC, List<Monster> newM, Door newD){
+        hero.setPosition(hPos);
+        walls = createWalls( newW);
+        coins = createCoins(newC);
+        monsters = createMonsters(newM);
+        door = newD;
+    }
+
+    public void clearAll(){
+        walls.removeAll(walls);
+        coins.removeAll(coins);
+        monsters.removeAll(monsters);
     }
 
     private List<Wall> createWalls(List<Wall> newWalls) {
@@ -58,6 +67,10 @@ public class Arena {
             if (coin.getPosition().equals(pos)) {
                 coins.remove(coin);
                 score ++;
+                if (coins.isEmpty()) {
+                    door.open = true;
+                    System.out.println("Door was open!\n");
+                }
                 break;
             }
         }
@@ -83,6 +96,12 @@ public class Arena {
         return false;
     }
 
+    public Boolean nextArena(){
+        if (door.getPosition().equals(hero.getPosition()) && door.open)
+            return true;
+        return false;
+    }
+
     public void draw(TextGraphics tGraphic){
         tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));
         tGraphic.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
@@ -93,5 +112,6 @@ public class Arena {
             coin.draw( tGraphic);
         for (Monster monster : monsters)
             monster.draw(tGraphic);
+        door.draw(tGraphic);
     }
 }

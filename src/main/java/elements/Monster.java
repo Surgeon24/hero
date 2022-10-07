@@ -1,5 +1,6 @@
 package elements;
 
+import arenas.Arena;
 import arenas.Arena1;
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
@@ -13,7 +14,7 @@ public class Monster extends Element {
     private final int step = 1;
     public Monster(int newX, int newY) { super(newX, newY);}
 
-    public Position move(Arena1 a){
+    public Position move(Arena a){
         Random random = new Random();
         switch (random.nextInt(5)){
             case 1 -> {
