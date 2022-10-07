@@ -1,15 +1,17 @@
 package arenas;
 
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import elements.Coin;
-import elements.Monster;
-import elements.Position;
-import elements.Wall;
+import elements.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Arena {
+    private String floorColor = "#696969";
+    public Hero hero = new Hero(10, 10);
     private int length;
     private int width;
     public Integer score = 0;
@@ -17,37 +19,39 @@ public class Arena {
     private List<Coin> coins;
     private List<Monster> monsters;
 
-    public Arena(){
-        this.walls = createWalls();
-        this.coins = createCoins();
-        this.monsters = createMonsters();
-    }
-
+    public Arena(){}
     public int getLength(){ return length;}
     public int getWidth(){ return width;}
+
+    public List<Wall> getWalls(){ return walls;}
+    public List<Coin> getCoins(){ return coins;}
     public List<Monster> getMonsters(){ return monsters;}
 
-    private List<Wall> createWalls() {
+    public void createAll(int l, int w, List<Wall> newWalls, List<Coin> newCoin, List<Monster> newMonsters){
+        this.length = l;
+        this.width = w;
+        this.walls = createWalls( newWalls);
+        this.coins = createCoins(newCoin);
+        this.monsters = createMonsters(newMonsters);
+    }
+
+    private List<Wall> createWalls(List<Wall> newWalls) {
         List<Wall> walls = new ArrayList<>();
-        //main walls
-        for (int l = 0; l < length; l++) {
-            walls.add(new Wall(l, 0));
-            walls.add(new Wall(l, width));
-        }
-        for (int w = 1; w < width; w++) {
-            walls.add(new Wall(0, w));
-            walls.add(new Wall(length-1, w));
-        }
+        walls.addAll(newWalls);
         return walls;
     }
 
-    private List<Coin> createCoins() {
+    private List<Coin> createCoins(List<Coin> newCoins) {
         ArrayList<Coin> coins = new ArrayList<>();
-        return coins;}
+        coins.addAll(newCoins);
+        return coins;
+    }
 
-    private List<Monster> createMonsters() {
+    private List<Monster> createMonsters(List<Monster> newMonsters) {
         ArrayList<Monster> monsters = new ArrayList<>();
-        return monsters;}
+        monsters.addAll(newMonsters);
+        return monsters;
+    }
 
     public void retrieveCoins(Position pos){
         for (Coin coin : coins){
@@ -79,5 +83,15 @@ public class Arena {
         return false;
     }
 
-    public void draw(TextGraphics tGraphic){}
+    public void draw(TextGraphics tGraphic){
+        tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));
+        tGraphic.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
+        hero.draw(tGraphic);
+        for (Wall wall : walls)
+            wall.draw(tGraphic);
+        for (Coin coin : coins)
+            coin.draw( tGraphic);
+        for (Monster monster : monsters)
+            monster.draw(tGraphic);
+    }
 }

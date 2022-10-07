@@ -11,31 +11,25 @@ import java.util.List;
 import java.util.Random;
 
 
-public class Arena0 {
+public class Arena0 extends Arena{
     //colors
     public String floorColor = "#696969";
-    public String wallColor = "#0d0a02";
     private int length;
     private int width;
-    public Integer score = 0;
     private List<Wall> walls;
     private List<Coin> coins;
-
     private List<Monster> monsters;
-    public Hero hero = new Hero(10, 10);
     public Arena0(int l, int w){
-        length = l;
-        width = w;
+        this.length = l;
+        this.width = w;
         this.walls = createWalls();
         this.coins = createCoins();
         this.monsters = createMonsters();
-
     }
 
-    public int getLength(){ return length;}
-    public int getWidth(){ return width;}
+    public List<Wall> getWalls(){ return walls;}
+    public List<Coin> getCoins(){ return coins;}
     public List<Monster> getMonsters(){ return monsters;}
-
     private List<Wall> createWalls() {
         List<Wall> walls = new ArrayList<>();
         //main walls
@@ -73,52 +67,17 @@ public class Arena0 {
     }
 
     private List<Coin> createCoins() {
-        Random random = new Random();
         ArrayList<Coin> coins = new ArrayList<>();
-        coins.add(new Coin(15, 7));
         coins.add(new Coin(30, 7));
-        coins.add(new Coin(45, 10));
-        coins.add(new Coin(30, 13));
-        coins.add(new Coin(15, 13));
         return coins;
     }
 
     private List<Monster> createMonsters() {
         ArrayList<Monster> monsters = new ArrayList<>();
-        monsters.add(new Monster(17,6));
-        monsters.add(new Monster(30,10));
         return monsters;
     }
 
-    public void retrieveCoins(Position pos){
-        for (Coin coin : coins){
-            if (coin.getPosition().equals(pos)) {
-                coins.remove(coin);
-                score ++;
-                break;
-            }
-        }
-    }
 
-    public boolean canHeroMove(Position pos){
-        if (!checkWall(pos))
-            return true;
-        return false;
-    }
-
-    public boolean canMonsterMove(Position pos){
-        if (!checkWall(pos))
-            return true;
-        return false;
-    }
-
-    public boolean checkWall(Position pos){
-        for (Wall wall : walls){
-            if (wall.getPosition().equals(pos))
-                return true;
-        }
-        return false;
-    }
 
     public void draw(TextGraphics tGraphic){
         tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));

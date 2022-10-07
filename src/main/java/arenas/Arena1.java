@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class Arena1 extends Arena {
+public class Arena1 {
     private String floorColor = "#696969";
     private int length;
     private int width;
@@ -101,7 +101,6 @@ public class Arena1 extends Arena {
         }
         return false;
     }
-
     public void draw(TextGraphics tGraphic){
         tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));
         tGraphic.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');

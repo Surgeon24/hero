@@ -1,5 +1,6 @@
 package common;
 
+import arenas.Arena;
 import arenas.Arena0;
 import arenas.Arena1;
 import elements.Monster;
@@ -13,11 +14,14 @@ import java.io.IOException;
 import java.util.List;
 
 public class Game {
+
+    public int length = 80;
+    public int width = 23;
     private static Screen screen;
     private boolean runGame = true;
-    //allows us to draw figures and change bg color
-    Arena0 arena0= new Arena0(80, 23);
-    Arena1 arena1 = new Arena1(80, 23);
+    Arena arena = new Arena();
+    Arena0 arena0= new Arena0(length, width);
+    Arena1 arena1 = new Arena1(length, width);
     Mainbar mainbar = new Mainbar();
     public Integer score = 0;
     private int step = 1;
@@ -41,7 +45,7 @@ public class Game {
                 arena0.draw(screen.newTextGraphics());
             if (option == 1)
                 arena1.draw(screen.newTextGraphics());
-            mainbar.draw(score+ arena0.score+arena1.score, screen.newTextGraphics());
+            mainbar.draw(score, screen.newTextGraphics());
             screen.refresh();
         }
         catch (IOException e){
@@ -53,6 +57,8 @@ public class Game {
         try {
             MainMenu mainMenu = new MainMenu();
             option = mainMenu.showMenu(screen);
+            System.out.println(arena0.getWalls());
+            arena.createAll(length, width, arena0.getWalls(), arena0.getCoins(), arena0.getMonsters());
             while (runGame) {
                 draw();
                 if (verifyMonsterCollisions(arena1.getMonsters(), arena1.hero.getPosition()))
