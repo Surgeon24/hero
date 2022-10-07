@@ -4,6 +4,7 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import common.MetaInf;
 import elements.*;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Arena {
     private List<Wall> walls;
     private List<Coin> coins;
     private List<Monster> monsters;
-
+    private List<String> text;
     private Door door;
 
     public Arena(){}
@@ -30,12 +31,13 @@ public class Arena {
     public List<Monster> getMonsters(){ return monsters;}
     public Door getDoor(){ return door;}
 
-    public void createAll(Position hPos, List<Wall> newW, List<Coin> newC, List<Monster> newM, Door newD){
-        hero.setPosition(hPos);
-        walls = createWalls( newW);
-        coins = createCoins(newC);
-        monsters = createMonsters(newM);
-        door = newD;
+    public void createAll(MetaInf inf){
+        hero.setPosition(inf.pos);
+        walls = createWalls( inf.walls);
+        coins = createCoins(inf.coins);
+        monsters = createMonsters(inf.monsters);
+        text = inf.text;
+        door = inf.door;
     }
 
     public void clearAll(){
@@ -102,16 +104,24 @@ public class Arena {
         return false;
     }
 
-    public void draw(TextGraphics tGraphic){
-        tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));
-        tGraphic.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
-        hero.draw(tGraphic);
+    public void draw(TextGraphics tGraphics){
+
+        tGraphics.setBackgroundColor(TextColor.Factory.fromString(floorColor));
+        tGraphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
+        hero.draw(tGraphics);
         for (Wall wall : walls)
-            wall.draw(tGraphic);
+            wall.draw(tGraphics);
         for (Coin coin : coins)
-            coin.draw( tGraphic);
+            coin.draw( tGraphics);
         for (Monster monster : monsters)
-            monster.draw(tGraphic);
-        door.draw(tGraphic);
+            monster.draw(tGraphics);
+        door.draw(tGraphics);
+        tGraphics.setBackgroundColor(TextColor.Factory.fromString(floorColor));
+        tGraphics.setForegroundColor(TextColor.Factory.fromString("#bbbbbb"));
+        int i = 1;
+        for (String t : text) {
+            tGraphics.putString(new TerminalPosition(5, 2*i), t);
+            i++;
+        }
     }
 }

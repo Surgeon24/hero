@@ -14,16 +14,19 @@ import static common.Globals.width;
 
 
 public class Arena0 {
+    private TextGraphics tGraphics;
     public String floorColor = "#696969";
     private List<Wall> walls;
     private List<Coin> coins;
     private List<Monster> monsters;
+private List<String> text;
     private Door door;
-    public Hero hero = new Hero(4, 7);
+    public Hero hero = new Hero(4, 14);
     public Arena0(){
         walls = createWalls();
         coins = createCoins();
         monsters = createMonsters();
+        text = createText();
         door = new Door(78,22);
 
     }
@@ -34,7 +37,7 @@ public class Arena0 {
     public Door getDoor(){ return door;}
 
     public MetaInf getAll(){
-        MetaInf meta = new MetaInf(hero.getPosition(), walls, coins, monsters, door);
+        MetaInf meta = new MetaInf(hero.getPosition(), walls, coins, monsters, door, text);
         return meta;
     }
     private List<Wall> createWalls() {
@@ -50,24 +53,16 @@ public class Arena0 {
         }
         //additional walls
         for (int l = 0; l < length; l++) {
-            walls.add(new Wall(l, 5));
-        }
-        for (int l = 0; l < length-5; l++) {
-            walls.add(new Wall(l, 8));
             walls.add(new Wall(l, 12));
         }
-        for (int w = 8; w <= 12; w++) {
-            walls.add(new Wall(length-5, w));
-            walls.add(new Wall(length-5, w));
-        }
-        //
-        for (int l = 5; l < length; l++) {
+        for (int l = 0; l < length-6; l++) {
+            walls.add(new Wall(l, 15));
             walls.add(new Wall(l, 16));
-            walls.add(new Wall(l, 20));
         }
-        for (int w = 16; w < 20; w++) {
-            walls.add(new Wall(5, w));
-            walls.add(new Wall(5, w));
+
+        for (int l = 6; l < length; l++) {
+            walls.add(new Wall(l, 19));
+            walls.add(new Wall(l, 20));
         }
 
         return walls;
@@ -84,25 +79,24 @@ public class Arena0 {
         return monsters;
     }
 
+    private List<String> createText(){
+        ArrayList<String> text = new ArrayList<>();
+        text.add("You are a proud X who wanted to feel the wind of change.");
+        text.add("Your path will be full of dangers, but the reward is worth it.");
+        text.add("Are you actually ready?");
+        text.add("Prove it! Collect all coins to open the door and get to the next room.");
+        return text;
+    }
 
 
-    public void draw(TextGraphics tGraphic){
-        tGraphic.setBackgroundColor(TextColor.Factory.fromString(floorColor));
-        tGraphic.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(length, width), ' ');
-        hero.draw( tGraphic);
-        for (Wall wall : walls)
-            wall.draw( tGraphic);
-        for (Coin coin : coins)
-            coin.draw( tGraphic);
-        for (Monster monster : monsters)
-            monster.draw(tGraphic);
-        tGraphic.setForegroundColor(TextColor.Factory.fromString(hero.getColor()));
-        tGraphic.putString(new TerminalPosition(25, 3), "Your path will be full of dangers, but the reward is worth it.");
+    public TextGraphics draw(){
+        tGraphics.setForegroundColor(TextColor.Factory.fromString(hero.getColor()));
+        tGraphics.putString(new TerminalPosition(25, 3), "Your path will be full of dangers, but the reward is worth it.");
         if (hero.getY() > 10)
-            tGraphic.putString(new TerminalPosition(25, 3), "You are a proud X who wanted to feel the wind of change.");
+            tGraphics.putString(new TerminalPosition(25, 3), "You are a proud X who wanted to feel the wind of change.");
         if (hero.getY() > 15)
-            tGraphic.putString(new TerminalPosition(25, 3), "Are you actually ready?");
+            tGraphics.putString(new TerminalPosition(25, 3), "Are you actually ready?");
 
-
+        return tGraphics;
     }
 }

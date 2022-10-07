@@ -13,9 +13,6 @@ import com.googlecode.lanterna.input.KeyStroke;
 import java.io.IOException;
 import java.util.List;
 
-import static common.Globals.length;
-import static common.Globals.width;
-
 public class Game {
     private static Screen screen;
     private boolean runGame = true;
@@ -54,9 +51,9 @@ public class Game {
             MainMenu mainMenu = new MainMenu();
             option = mainMenu.showMenu(screen);
             if (option == 0)
-                arena.createAll(arena0.hero.getPosition(), arena0.getWalls(), arena0.getCoins(), arena0.getMonsters(), arena0.getDoor());
+                arena.createAll(arena0.getAll());
             if (option == 1)
-                arena.createAll(arena1.hero.getPosition(), arena1.getWalls(), arena1.getCoins(), arena1.getMonsters(), arena1.getDoor());
+                arena.createAll(arena1.getAll());
             while (runGame) {
                 draw();
                 if (verifyMonsterCollisions(arena.getMonsters(), arena.hero.getPosition()))
@@ -81,7 +78,7 @@ public class Game {
             if (arena.nextArena()){
                 System.out.println("True was returned!\n");
                 arena.clearAll();
-                arena.createAll(arena1.hero.getPosition(), arena1.getWalls(), arena1.getCoins(), arena1.getMonsters(), arena1.getDoor());
+                arena.createAll(arena1.getAll());
             }
         }
     }

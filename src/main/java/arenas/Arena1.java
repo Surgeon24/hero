@@ -1,5 +1,6 @@
 package arenas;
 import common.Game;
+import common.MetaInf;
 import elements.*;
 import com.googlecode.lanterna.*;
 import com.googlecode.lanterna.graphics.TextGraphics;
@@ -18,12 +19,14 @@ public class Arena1 {
     private List<Coin> coins;
 
     private List<Monster> monsters;
+    private List<String> text;
     private Door door;
     public Hero hero = new Hero(10, 10);
     public Arena1(){
         walls = createWalls();
         coins = createCoins();
         monsters = createMonsters();
+        text = createText();
         door = new Door(70,22);
     }
 
@@ -33,6 +36,10 @@ public class Arena1 {
     public List<Coin> getCoins(){ return coins;}
     public List<Monster> getMonsters(){ return monsters;}
     public Door getDoor(){ return door;}
+    public MetaInf getAll(){
+        MetaInf meta = new MetaInf(hero.getPosition(), walls, coins, monsters, door, text);
+        return meta;
+    }
     private List<Wall> createWalls() {
         List<Wall> walls = new ArrayList<>();
         //main walls
@@ -74,7 +81,11 @@ public class Arena1 {
         monsters.add(new Monster(30,10));
         return monsters;
     }
-
+    private List<String> createText(){
+        ArrayList<String> text = new ArrayList<>();
+        text.add("Dodge the spiders and collect all the coins to open another room.");
+        return text;
+    }
     public void retrieveCoins(Position pos){
         for (Coin coin : coins){
             if (coin.getPosition().equals(pos)) {
