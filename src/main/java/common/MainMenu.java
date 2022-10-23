@@ -9,15 +9,12 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 
 import java.io.IOException;
-
-import static com.googlecode.lanterna.input.KeyType.EOF;
-import static com.googlecode.lanterna.input.KeyType.values;
 import static common.Globals.length;
 import static common.Globals.width;
 
 public class MainMenu {
     private Boolean check = true;
-    int options = 1;
+    private int options = 1;
 
     public int showMenu(Screen screen) {
         try {
@@ -32,6 +29,7 @@ public class MainMenu {
         catch (IOException e){
             e.printStackTrace();
         }
+        check = true;
         return options;
     }
     public void draw(TextGraphics s) {
@@ -46,17 +44,17 @@ public class MainMenu {
         if (options == 1) s.setForegroundColor(TextColor.Factory.fromString("#ede9dd"));
         else s.setForegroundColor(TextColor.Factory.fromString("#968e5a"));
         s.putString(new TerminalPosition(30, 16), "START LEVEL 2");
+        if (options == 2) s.setForegroundColor(TextColor.Factory.fromString("#ede9dd"));
+        else s.setForegroundColor(TextColor.Factory.fromString("#968e5a"));
+        s.putString(new TerminalPosition(30, 19), "START LEVEL 3");
     }
 
     private void processKey(KeyStroke key) {
         switch (key.getKeyType()) {
             case EOF -> check = false;
-            case ArrowUp -> options = (options-1) % 2;
-            case ArrowDown -> options = (options+1) % 2;
-            case Enter -> {
-                if(options == 0) check = false;
-                else if (options == 1) check = false;
-            }
+            case ArrowUp -> options = (options-1) % 3;
+            case ArrowDown -> options = (options+1) % 3;
+            case Enter -> check = false;
         }
     }
 

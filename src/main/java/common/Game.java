@@ -1,8 +1,6 @@
 package common;
 
-import arenas.Arena;
-import arenas.Arena0;
-import arenas.Arena1;
+import arenas.*;
 import elements.Monster;
 import elements.Position;
 import com.googlecode.lanterna.screen.Screen;
@@ -15,13 +13,18 @@ import java.util.List;
 
 public class Game {
     private static Screen screen;
-    private boolean runGame = true;
+    private boolean runGame;
     Arena arena = new Arena();
+
     Arena0 arena0= new Arena0();
     Arena1 arena1 = new Arena1();
+    Arena2 arena2 = new Arena2();
+    Arena3 arena3 = new Arena3();
     Mainbar mainbar = new Mainbar();
+    MainMenu mainMenu = new MainMenu();
+    LoseScreen loseScreen = new LoseScreen();
     private int step = 1;
-    int option = 0;
+    int option = -1;
 
     public Game() {
         try {
@@ -47,24 +50,28 @@ public class Game {
     }
 
     public void run() {
-        try {
-            MainMenu mainMenu = new MainMenu();
-            option = mainMenu.showMenu(screen);
-            if (option == 0)
-                arena.createAll(arena0.getAll());
-            if (option == 1)
-                arena.createAll(arena1.getAll());
-            while (runGame) {
-                draw();
-                if (verifyMonsterCollisions(arena.getMonsters(), arena.hero.getPosition()))
-                    endScreen();
-                KeyStroke key = screen.readInput();
-                processKey(key);
+            try {
+                runGame = true;
+                while (runGame) {
+                    if (option == -1){
+                        option = mainMenu.showMenu(screen);
+                        System.out.println("game-run-option -1 occurred\n");
+                        switch (option){
+                            case 0 -> arena.createAll(arena0.getAll());
+                            case 1 -> arena.createAll(arena1.getAll());
+                            case 2 -> arena.createAll(arena2.getAll());
+                        }
+                    }
+                    draw();
+                    if (verifyMonsterCollisions(arena.getMonsters(), arena.hero.getPosition()))
+                        endScreen();
+                    KeyStroke key = screen.readInput();
+                    processKey(key);
+                }
+                screen.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            screen.close() ;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void moveHero(Position position) {
@@ -78,7 +85,12 @@ public class Game {
             if (arena.nextArena()){
                 System.out.println("True was returned!\n");
                 arena.clearAll();
-                arena.createAll(arena1.getAll());
+                option ++;
+                switch (option){
+                    case 1 -> arena.createAll(arena1.getAll());
+                    case 2 -> arena.createAll(arena2.getAll());
+                    case 3 -> arena.createAll(arena3.getAll());
+                }
             }
         }
     }
@@ -109,16 +121,15 @@ public class Game {
             case Character -> {
                 switch (key.getCharacter()){
                     case 'q' -> runGame = false;
+                    case 'm' -> {arena.score = 0; option = -1;}
                 }
             }
         }
     }
 
     private void endScreen(){
-        System.out.println("You lose! Your score is: " + arena.score);
-        System.out.println("Press any button to quit.");
-        try{ KeyStroke key = screen.readInput();}
-        catch (IOException e){e.printStackTrace();}
-        runGame = false;
+        loseScreen.showLoseScreen(screen, arena.score);
+        option = -1;
+        arena.score = 0;
     }
 }

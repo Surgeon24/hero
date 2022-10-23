@@ -5,7 +5,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 public class Door extends Element{
-    public Boolean open = false;
+    public Boolean open = true;
     private String closedDoorColor = "#125678";
     private String openedDoorColor = "#166678";
 

@@ -15,7 +15,6 @@ public class Element {
     }
     public void setPosition(Position pos){ this.position = pos;}
 
-    public String getColor(){ return "#ffffff";}
     public int getX() {
         return position.getX();
     }

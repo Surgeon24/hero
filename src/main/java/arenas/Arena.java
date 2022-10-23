@@ -69,10 +69,6 @@ public class Arena {
             if (coin.getPosition().equals(pos)) {
                 coins.remove(coin);
                 score ++;
-                if (coins.isEmpty()) {
-                    door.open = true;
-                    System.out.println("Door was open!\n");
-                }
                 break;
             }
         }
@@ -118,9 +114,9 @@ public class Arena {
         door.draw(tGraphics);
         tGraphics.setBackgroundColor(TextColor.Factory.fromString(floorColor));
         tGraphics.setForegroundColor(TextColor.Factory.fromString("#bbbbbb"));
-        int i = 1;
+        int i = 0;
         for (String t : text) {
-            tGraphics.putString(new TerminalPosition(5, 2*i), t);
+            tGraphics.putString(new TerminalPosition(5, 1+2*i), t);
             i++;
         }
     }
